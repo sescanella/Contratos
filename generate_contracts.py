@@ -6,12 +6,12 @@ from datetime import datetime
 
 import gspread
 from jinja2 import Environment, FileSystemLoader
-import pdfkit
+from weasyprint import HTML
 
 TEMPLATE_DIR = 'templates'
 TEMPLATE_NAME = 'contract_template.html'
 OUTPUT_DIR = 'PDFs'
-SERVICE_ACCOUNT_FILE = 'service_account.json'  # ruta del archivo de la cuenta de servicio
+SERVICE_ACCOUNT_FILE = r'C:\Users\sebas\OneDrive\Projects\Credenciales\service_account.json'  # ruta del archivo de la cuenta de servicio
 SPREADSHEET_NAME = 'CENCO_DOCUMENTACION_PERSONAS'  # nombre del archivo de Google Sheets
 SHEET_NAME = 'Personas'  # nombre de la hoja dentro del archivo
 
@@ -28,8 +28,6 @@ COLUMNS_TO_USE = [
     'Ciudad',
     'Tipo de contrato'  # <-- Añadida para el filtro
 ]
-
-WKHTMLTOPDF_PATH = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
 
 
 def limpiar_sueldo(valor):
@@ -116,14 +114,6 @@ def save_contract(html: str, filename: str):
         f.write(html)
 
 
-def html_a_pdf(html_path, pdf_path):
-    """
-    Convierte un archivo HTML a PDF usando pdfkit y wkhtmltopdf.
-    """
-    config = pdfkit.configuration(wkhtmltopdf=WKHTMLTOPDF_PATH)
-    pdfkit.from_file(html_path, pdf_path, configuration=config)
-
-
 def fecha_formateada():
     """
     Devuelve la fecha actual en formato 'Lunes 23 de junio del 2025'
@@ -148,17 +138,7 @@ def main():
         try:
             html = render_contract(rec, template)
             pdf_path = os.path.join(OUTPUT_DIR, rec['nombre_archivo'].replace('.html', '.pdf'))
-            config = pdfkit.configuration(wkhtmltopdf=WKHTMLTOPDF_PATH)
-            pdfkit.from_string(
-                html,
-                pdf_path,
-                configuration=config,
-                options={
-                    'disable-smart-shrinking': '',
-                    'no-print-media-type': '',
-                    'enable-local-file-access': ''  # <-- agrega esta línea
-                }
-            )
+            HTML(string=html).write_pdf(pdf_path)
         except Exception as e:
             print(f"Error generando PDF para {rec['nombre_completo']}: {e}")
     print(f'Se generaron {len(records)} contratos en PDF en la carpeta {OUTPUT_DIR}')
