@@ -74,38 +74,57 @@
     <img src="file:///C:/Users/sebas/OneDrive/Projects/Contratos/templates/img/logo.png" alt="Logo de la empresa" class="logo-empresa">
     <h1 class="titulo-contrato"><strong>CONTRATO DE TRABAJO</strong></h1>
 
-    <p>En Santiago de Chile, <strong>Lunes 23 de junio del 2025</strong>, entre <strong>Kronos Mining Ingeniería y Revestimiento Ltda.</strong>, R.U.T. <strong>76.142.966-3</strong>, en adelante también "el empleador", representado por Don <strong>Pablo Gines Escanella Salinas</strong>, R.U.T. <strong>9.581.567-7</strong>, ambos domiciliados en <strong>Cerro Los Cóndores 9871, Quilicura</strong>, por una parte; y por la otra, Don(a) <strong>{{empleado.nombre_completo}}</strong>, R.U.T. <strong>{{empleado.rut}}</strong>, domiciliado en calle <strong>{{empleado.direccion}}</strong>, comuna de <strong>{{empleado.comuna}}</strong>, ciudad de <strong>{{empleado.ciudad}}</strong>, en adelante también "el trabajador", se ha convenido el siguiente Contrato Individual de Trabajo por Obra:</p>
+    <p>En Santiago de Chile, <strong>Lunes 23 de junio de 2025</strong>, entre <strong>Kronos Mining Ingeniería y Revestimiento Ltda.</strong>, R.U.T. <strong>76.142.966-3</strong>, en adelante también el empleador, representado por Don <strong>Pablo Gines Escanella Salinas</strong>, R.U.T. <strong>9.581.567-7</strong>, ambos domiciliados en <strong>Cerro Los Cóndores 9871, Quilicura</strong>, por una parte; y por la otra, Don(a) <strong>{{empleado.nombre_completo}}</strong>, R.U.T. <strong>{{empleado.rut}}</strong>, domiciliado en calle <strong>{{empleado.direccion}}</strong>, comuna de <strong>{{empleado.comuna}}</strong>, ciudad de <strong>{{empleado.ciudad}}</strong>, en adelante también "el trabajador", se ha convenido el siguiente contrato:</p>
 
     <p class="clausula-titulo">PRIMERO:</p>
-    <p>El trabajador se compromete a prestar servicios en el área de <strong>Operaciones en terreno</strong> como <strong>{{empleado.nombre_del_cargo}}</strong> u otro trabajo o función similar relacionada directamente con dicho cargo, en la obra ubicada en <strong>Av. Pdte. Kennedy Lateral, 9001 Las Condes, Región Metropolitana</strong>. No obstante, el empleador podrá modificar el lugar o funciones del trabajador por razones fundadas, sin que ello implique menoscabo para el trabajador.</p>
+    <p>El trabajador se compromete y obliga a prestar servicios en el área de Kronos Mining como Jefe Administrativo u otro trabajo o función similar, que tenga directa relación con el cargo ya indicado, en <strong>Santa Rosa 5730</strong>. No obstante, el empleador podrá cambiar por causas justificadas la función desempeñada y el sitio o recinto en que los servicios deben prestarse sin que ello importe menoscabo para el trabajador.</p>
 
     <p class="clausula-titulo">SEGUNDO:</p>
-    <p>El trabajador percibirá una remuneración de:</p>
+    <p>El empleado percibirá una remuneración por obra de:</p>
     <ul>
-    <li><strong>Sueldo base:</strong> ${{empleado.sueldo}}</li>
-    {% for sueldo in empleado.sueldos_base %}
-    <li><strong>{{sueldo.nombre}}:</strong> ${{sueldo.monto}}</li>
-    {% endfor %}
-    {% for bono in empleado.bonos %}
-    <li><strong>{{bono.nombre}}:</strong> ${{bono.monto}}</li>
-    {% endfor %}
-    {% for bono in empleado.no_imponibles %}
-    <li><strong>{{bono.nombre}}:</strong> ${{bono.monto}}</li>
-    {% endfor %}
+      <li><strong>Sueldo base:</strong> ${{empleado.sueldo}}</li>
+      {% for sueldo in empleado.sueldos_base %}
+      <li><strong>{{sueldo.nombre}}:</strong> ${{sueldo.monto}}</li>
+      {% endfor %}
+      {% for bono in empleado.bonos %}
+      <li><strong>{{bono.nombre}}:</strong> ${{bono.monto}}</li>
+      {% endfor %}
+      {% for bono in empleado.no_imponibles %}
+      <li><strong>{{bono.nombre}}:</strong> ${{bono.monto}}</li>
+      {% endfor %}
     </ul>
-    <p>Las remuneraciones se pagarán por períodos vencidos el día <strong>30</strong> de cada mes, mediante depósito en cuenta vista informada por el trabajador, en moneda nacional.</p>
+    <p>Las remuneraciones se pagarán por meses vencidos dentro de los días hábiles del mes siguiente, de acuerdo a los días correspondientes trabajados en el mes, en moneda nacional y utilizando el sistema cuenta vista. La que deberá ser informada por el trabajador, aceptando desde ya este sistema de pago.</p>
 
     <p class="clausula-titulo">TERCERO:</p>
-    <p>Se pacta una jornada ordinaria semanal de <strong>44 horas</strong>, distribuidas de lunes a jueves desde las <strong>08:00 a 17:30</strong> horas y los viernes desde <strong>08:00 a 16:30</strong> horas, con una pausa para colación de 30 minutos entre las 13:00 y 13:30 horas.</p>
+    <p>La Empresa se obliga a pagar al empleado una gratificación anual equivalente al 25% (veinticinco por ciento) del total de las remuneraciones mensuales que éste hubiere percibido en el año, con tope de 4,75 Ingresos Mínimos Mensuales.</p>
+    <p>Esta gratificación se calculará, liquidará y anticipará mensualmente en forma coetánea con la remuneración del mes respectivo, siendo cada abono equivalente a la doceava parte de la gratificación anual.</p>
+    <p>La gratificación así convenida es incompatible y sustituye a la que resulte de la aplicación de los artículos 47 y siguientes del Código del Trabajo.</p>
+    <p>Para los efectos de cotejar la gratificación convenida en esta cláusula con la que, según la ley, eventualmente podrá corresponder al empleado, los valores anticipados mensualmente se reajustarán en conformidad con lo dispuesto en el artículo 63 del Código del Trabajo, y se entenderá que fueron abonados con carácter de anticipos de dichas gratificaciones legales.</p>
+    <p>Con todo, si las sumas anticipadas a título de gratificación convencional resultaren mayores que las que legalmente correspondieren al empleador, el exceso se consolidará en beneficio del trabajador.</p>
 
     <p class="clausula-titulo">CUARTO:</p>
-    <p>El presente contrato tendrá vigencia desde el <strong>23 de junio de 2025</strong> y se mantendrá vigente hasta la total finalización de la obra antes señalada. Cualquiera de las partes podrá poner término anticipado conforme a las causales establecidas en el Código del Trabajo.</p>
+    <p>Cuando por necesidades de funcionamiento de la Empresa, sea necesario pactar trabajo en tiempo extraordinario, el empleado que lo acuerde desde luego se obligará a cumplir el horario que al efecto determine la empleadora, dentro de los límites legales. A falta de acuerdo, queda prohibido expresamente al empleado trabajar sobretiempo o simplemente permanecer en el recinto de la Empresa después de la hora diaria de salida, salvo en los casos a que se refiere el inciso precedente.</p>
+    <p>El tiempo extraordinario trabajado de acuerdo a las estipulaciones precedentes se remunerará con el recargo legal correspondiente y se liquidará y pagará conjuntamente con la remuneración del respectivo período. El número de horas extras y su valor se calculará sobre aquellas efectuadas entre los días 20 del mes anterior y 21 del mes en que corresponde el pago de la remuneración mensual.</p>
 
     <p class="clausula-titulo">QUINTO:</p>
-    <p>Las demás condiciones laborales se regirán conforme al Código del Trabajo, al Reglamento Interno de Orden, Higiene y Seguridad, y a la normativa vigente aplicable a los contratos por obra o faena.</p>
+    <p>El trabajador, asimismo, acepta y autoriza al empleador para que haga las deducciones que establecen las leyes vigentes y para que le descuente el tiempo no trabajado debido a atrasos, inasistencias o permisos y, además, la rebaja del monto de las multas establecidas en el Reglamento Interno de Orden, Higiene y Seguridad, en caso que procedieren.</p>
 
     <p class="clausula-titulo">SEXTO:</p>
-    <p>Ambas partes declaran haber leído y comprendido íntegramente el presente contrato, firmándolo en dos ejemplares de igual tenor, quedando uno en poder de cada parte.</p>
+    <p>El trabajador se obliga y compromete expresamente a cumplir las instrucciones que le sean impartidas por su jefe inmediato o por la Gerencia de la empresa y acatar en todas sus partes las disposiciones establecidas en el Reglamento de Orden, Higiene y Seguridad, las que declara conocer y que, para estos efectos, se consideran parte integrante del presente contrato, reglamento del cual el trabajador recibe un ejemplar en este acto. Asimismo, el trabajador deberá guardar la más absoluta reserva sobre los asuntos y negocios de la empresa y/o personas que traten en el desempeño de sus funciones y que hayan llegado a su conocimiento por cualquier medio.</p>
+    <p>Además, el trabajador se obliga a: no ejecutar ningún tipo de negocio que tenga relación con la empresa ni recibir ningún tipo de valores avaluado en especies o dinero; trabajar exclusivamente para la organización dentro de las horas fijadas en la jornada de trabajo respectiva; no desempeñar otra actividad lucrativa fuera de las horas de trabajo compatibles con el giro del negocio o que perjudique su desempeño; ejecutar los trabajos concernientes a su empleo en la forma más eficaz posible empleando para ello la mejor diligencia y dedicación; concurrir puntual y regularmente a sus labores, siendo obligación del trabajador registrar su asistencia en los controles que existan con este objeto.</p>
+
+    <p class="clausula-titulo">SÉPTIMO:</p>
+    <p>Las partes acuerdan en este acto que los atrasos reiterados, sin causa justificada, de parte del trabajador, se considerarán incumplimiento grave de las obligaciones que impone el presente contrato y darán lugar a la aplicación de la caducidad del contrato, contemplada en el art. 160 Nº7 del Código del Trabajo.</p>
+
+    <p class="clausula-titulo">OCTAVO:</p>
+    <p>El trabajador tendrá una jornada de trabajo que se distribuye de la siguiente manera: cumplirá una jornada semanal ordinaria de 44,0 horas, de acuerdo a la siguiente distribución diaria: lunes a viernes de 08:00 a 17:30 horas. La jornada de trabajo será interrumpida con un descanso de 30 minutos entre las 13:00 y las 13:30 horas, destinados a la colación.</p>
+
+    <p class="clausula-titulo">NOVENO:</p>
+    <p>El presente contrato regirá hasta el pero cualquiera de las partes, o ambas, según el caso, podrán ponerle término en cualquier momento con arreglo a la ley.</p>
+
+    <p class="clausula-titulo">DÉCIMO:</p>
+    <p>Se deja constancia que el empleado ingresó al servicio de la Empresa con fecha <strong>2021-06-01</strong>.</p>
+    <p>El presente contrato se firma en dos ejemplares, quedando en este mismo acto uno en poder de cada contratante.</p>
 
     <table align="center" border="0" cellpadding="1" cellspacing="1" style="width:100%">
       <tr>
