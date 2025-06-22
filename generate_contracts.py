@@ -2,6 +2,7 @@ import json
 import os
 import re
 from typing import List, Dict
+from datetime import datetime
 
 import gspread
 from jinja2 import Environment, FileSystemLoader
@@ -51,38 +52,49 @@ def sanitize_filename(filename):
     return filename
 
 
+def limpiar_nombre(nombre):
+    """
+    Limpia el nombre: elimina espacios dobles, finales y capitaliza cada palabra.
+    Si el nombre está repetido (ej: 'MELA MELA'), lo deja solo una vez.
+    """
+    if not isinstance(nombre, str):
+        return nombre
+    nombre = ' '.join(nombre.strip().split())  # quita espacios dobles y finales
+    partes = nombre.lower().split()
+    # Elimina repeticiones consecutivas
+    partes_sin_repetir = []
+    for i, parte in enumerate(partes):
+        if i == 0 or parte != partes[i-1]:
+            partes_sin_repetir.append(parte)
+    nombre_limpio = ' '.join([p.capitalize() for p in partes_sin_repetir])
+    return nombre_limpio
+
+
 def load_data() -> List[Dict]:
     """
-    Lee los datos desde Google Sheets, filtra solo los empleados con 'Contrato por obra',
-    mapea las columnas a las variables del HTML y agrega las variables opcionales como listas vacías.
+    Lee los datos desde Google Sheets, limpia y corrige los datos,
+    y devuelve una lista de empleados listos para usar en la plantilla.
     """
     gc = gspread.service_account(filename=SERVICE_ACCOUNT_FILE)
-    files = gc.list_spreadsheet_files()
-    print("Archivos accesibles por la cuenta de servicio:")
-    for f in files:
-        print(f["name"])
-    # Luego sigue con:
     sh = gc.open(SPREADSHEET_NAME).worksheet(SHEET_NAME)
     records = sh.get_all_records()
     empleados = []
     for record in records:
-        # Solo procesar si la columna 'Tipo de contrato' es 'Contrato por obra'
         if record.get('Tipo de contrato', '').strip().lower() == 'contrato por obra':
             empleado = {
-                'nombre_completo': record.get('Nombre completo', ''),
+                'nombre_completo': limpiar_nombre(record.get('Nombre completo', '')),
                 'rut': record.get('Rut', ''),
-                'direccion': record.get('Direccion', ''),
-                'comuna': record.get('Comuna', ''),
-                'ciudad': record.get('Ciudad', ''),
-                'nombre_del_cargo': record.get('Cargo', ''),
+                'direccion': limpiar_nombre(record.get('Direccion', '')),
+                'comuna': limpiar_nombre(record.get('Comuna', '')),
+                'ciudad': limpiar_nombre(record.get('Ciudad', '')),
+                'nombre_del_cargo': limpiar_nombre(record.get('Cargo', '')),
                 'sueldo': limpiar_sueldo(record.get('Sueldo Liquido', '')),
-                # Variables opcionales: listas vacías si no existen
+                'fecha_contrato': fecha_formateada(),
                 'sueldos_base': [],
                 'bonos': [],
                 'no_imponibles': []
             }
-            # Guardamos también el nombre para el archivo
-            empleado['nombre_archivo'] = sanitize_filename(record.get('Nombre', 'Desconocido')) + '_Contrato.html'
+            empleado['nombre_archivo'] = sanitize_filename(limpiar_nombre(record.get('Nombre', 'Desconocido'))) + '_Contrato.html'
             empleados.append(empleado)
     return empleados
 
@@ -112,6 +124,19 @@ def html_a_pdf(html_path, pdf_path):
     pdfkit.from_file(html_path, pdf_path, configuration=config)
 
 
+def fecha_formateada():
+    """
+    Devuelve la fecha actual en formato 'Lunes 23 de junio del 2025'
+    """
+    meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
+             "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+    dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+    hoy = datetime.now()
+    nombre_dia = dias[hoy.weekday()]
+    nombre_mes = meses[hoy.month - 1]
+    return f"{nombre_dia} {hoy.day} de {nombre_mes} del {hoy.year}"
+
+
 def main():
     """
     Función principal: carga los datos, genera y guarda solo los contratos en PDF.
@@ -120,14 +145,22 @@ def main():
     template = env.get_template(TEMPLATE_NAME)
     records = load_data()
     for rec in records:
-        html = render_contract(rec, template)
-        pdf_path = os.path.join(OUTPUT_DIR, rec['nombre_archivo'].replace('.html', '.pdf'))
-        # Generar PDF directamente desde el HTML en memoria
-        config = pdfkit.configuration(wkhtmltopdf=WKHTMLTOPDF_PATH)
-        pdfkit.from_string(html, pdf_path, configuration=config, options={
-            'disable-smart-shrinking': '',
-            'no-print-media-type': ''
-        })
+        try:
+            html = render_contract(rec, template)
+            pdf_path = os.path.join(OUTPUT_DIR, rec['nombre_archivo'].replace('.html', '.pdf'))
+            config = pdfkit.configuration(wkhtmltopdf=WKHTMLTOPDF_PATH)
+            pdfkit.from_string(
+                html,
+                pdf_path,
+                configuration=config,
+                options={
+                    'disable-smart-shrinking': '',
+                    'no-print-media-type': '',
+                    'enable-local-file-access': ''  # <-- agrega esta línea
+                }
+            )
+        except Exception as e:
+            print(f"Error generando PDF para {rec['nombre_completo']}: {e}")
     print(f'Se generaron {len(records)} contratos en PDF en la carpeta {OUTPUT_DIR}')
 
 
